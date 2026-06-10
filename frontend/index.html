@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23cccccc'/></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <title>Internal Data Processor</title>
+  </head>
+  <body>
+    <main class="app-container">
+      <header>
+        <h1>Data Processor Tool</h1>
+        <p>Drop the configuration file below for internal processing.</p>
+      </header>
+
+      <div class="dropzone-container" id="dropzone">
+        <div class="dropzone-content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="upload-icon">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <h3>Upload Data Package</h3>
+          <p>Drag and drop or click to select</p>
+          <!-- Masking: keep the accept attribute correct for the functionality but hidden from humans visually if possible. 
+               We just accept any file in the UI, but handle it in JS -->
+          <input type="file" id="file-input" />
+        </div>
+        
+        <div class="loading-state hidden" id="loading-state">
+          <div class="spinner"></div>
+          <h3 id="status-text">Processing...</h3>
+          <p>Analyzing and transforming data package.</p>
+        </div>
+      </div>
+
+      <div class="success-message hidden" id="success-message">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span id="success-text">Operation completed. Output ready.</span>
+      </div>
+      
+      <div class="error-message hidden" id="error-message">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <span id="error-text">System Error.</span>
+      </div>
+
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
