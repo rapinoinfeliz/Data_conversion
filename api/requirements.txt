@@ -1,0 +1,6 @@
+lxml
+pycryptodome
+oscrypto
+asn1crypto
+Flask
+Werkzeug
