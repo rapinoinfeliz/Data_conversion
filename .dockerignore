@@ -1,0 +1,9 @@
+node_modules/
+api/venv/
+api/__pycache__/
+dist/
+*.acsm
+*.epub
+.env
+.git
+.gitignore

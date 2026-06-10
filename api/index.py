@@ -16,7 +16,21 @@ import libadobeFulfill
 import register_ADE_account
 import ineptepub
 
-app = Flask(__name__)
+# The dist folder will be in the parent directory of api after Docker build
+dist_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dist")
+app = Flask(__name__, static_folder=dist_dir, static_url_path="/")
+
+@app.route("/")
+def serve_index():
+    from flask import send_from_directory
+    return send_from_directory(app.static_folder, "index.html")
+
+@app.errorhandler(404)
+def serve_spa(e):
+    from flask import send_from_directory
+    if request.path.startswith("/api/"):
+        return jsonify({"error": "Not found"}), 404
+    return send_from_directory(app.static_folder, "index.html")
 
 def get_private_key_der(session_dir):
     activation_path = libadobe.get_activation_xml_path()
