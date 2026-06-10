@@ -1,5 +1,5 @@
 # Etapa 1: Build do Frontend (Vite) com Node.js
-FROM node:18-bullseye AS frontend-builder
+FROM node:20-bullseye AS frontend-builder
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
