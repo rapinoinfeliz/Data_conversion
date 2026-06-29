@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import base64
 import zipfile
 from lxml import etree
@@ -98,9 +99,8 @@ def main():
     download_url = src_node.text
 
     # Sanitize title for filename
-    safe_title = "".join([c for c in title if c.isalpha() or c.isdigit() or c==' ']).strip()
-    if not safe_title:
-        safe_title = "output_book"
+    safe_title = re.sub(r'[^\w\s-]', '', title, flags=re.UNICODE).strip()[:100]
+    safe_title = re.sub(r'\s+', '_', safe_title) or "output_book"
         
     encrypted_filename = os.path.join(output_dir, f"{safe_title}_encrypted.epub")
     decrypted_filename = os.path.join(output_dir, f"{safe_title}.epub")

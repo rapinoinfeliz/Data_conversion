@@ -5,7 +5,8 @@ import base64
 import zipfile
 import tempfile
 import shutil
-from flask import Flask, request, send_file, jsonify
+import re
+from flask import Flask, request, send_file, jsonify, after_this_request
 from lxml import etree
 
 # Include the current directory in sys.path so we can import local modules
@@ -58,6 +59,11 @@ def convert():
     session_dir = os.path.join(tempfile.gettempdir(), session_id)
     os.makedirs(session_dir, exist_ok=True)
     
+    @after_this_request
+    def cleanup(response):
+        shutil.rmtree(session_dir, ignore_errors=True)
+        return response
+        
     try:
         acsm_path = os.path.join(session_dir, "input.acsm")
         file.save(acsm_path)
@@ -100,9 +106,8 @@ def convert():
             
         download_url = src_node.text
         
-        safe_title = "".join([c for c in title if c.isalpha() or c.isdigit() or c==' ']).strip()
-        if not safe_title:
-            safe_title = "output_book"
+        safe_title = re.sub(r'[^\w\s-]', '', title, flags=re.UNICODE).strip()[:100]
+        safe_title = re.sub(r'\s+', '_', safe_title) or "output_book"
             
         encrypted_filename = os.path.join(session_dir, f"{safe_title}_encrypted.epub")
         decrypted_filename = os.path.join(session_dir, f"{safe_title}.epub")
@@ -123,8 +128,8 @@ def convert():
                 with zipfile.ZipFile(encrypted_filename, 'a') as zf:
                     if 'META-INF/rights.xml' not in zf.namelist():
                         zf.writestr('META-INF/rights.xml', rights_str)
-        except Exception:
-            pass # Not fatal
+        except Exception as e:
+            app.logger.warning(f"Rights injection failed (non-fatal): {e}")
             
         # Decrypt
         userkey = get_private_key_der(session_dir)

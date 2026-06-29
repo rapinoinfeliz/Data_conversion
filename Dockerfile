@@ -5,7 +5,6 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY index.html main.js style.css vite.config.js* ./
 COPY public ./public
-COPY src ./src
 RUN npm run build
 
 # Etapa 2: Servidor Python com dependências

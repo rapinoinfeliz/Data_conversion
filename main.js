@@ -64,11 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Show loading state
     loadingState.classList.remove('hidden');
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minutos
+
     try {
       const response = await fetch('/api/index', {
         method: 'POST',
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         let errorData;
@@ -102,6 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
       showSuccess();
 
     } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        showError('Tempo limite excedido. O servidor demorou mais de 2 minutos para responder.');
+        return;
+      }
       console.error('Error:', error);
       showError(error.message);
     } finally {
